@@ -10,9 +10,10 @@ def get_date_last_week_started():
 
 def get_trending_repositories(top_size):
     min_created_date = get_date_last_week_started()
-    github_search_request = \
-        'https://api.github.com/search/repositories?q=language:python+created:>%s&sort=stars&order=desc' % min_created_date
-    response = requests.get(github_search_request)
+    github_request_params = dict(q='created:>%s' % min_created_date,
+                                 sort='stars', order='desc')
+    github_search_request = 'https://api.github.com/search/repositories'
+    response = requests.get(github_search_request, github_request_params)
     return response.json()['items'][:top_size]
 
 
@@ -25,5 +26,6 @@ def print_trending_repositories(trending_repositories):
 
 
 if __name__ == '__main__':
-    trending_repositories = get_trending_repositories(20)
+    count_trending_repos = 20
+    trending_repositories = get_trending_repositories(count_trending_repos)
     print_trending_repositories(trending_repositories)
