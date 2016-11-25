@@ -4,14 +4,15 @@ import requests
 
 def get_date_last_week_started():
     today = datetime.date.today()
-    week = datetime.timedelta(days=7)
+    count_day_in_week = 7
+    week = datetime.timedelta(days=count_day_in_week)
     return today - week
 
 
 def get_trending_repositories(top_size):
     min_created_date = get_date_last_week_started()
-    github_request_params = dict(q='created:>%s' % min_created_date,
-                                 sort='stars', order='desc')
+    github_request_params = {'q': 'created:>%s' % min_created_date,
+                             'sort': 'stars', 'order': 'desc'}
     github_search_request = 'https://api.github.com/search/repositories'
     response = requests.get(github_search_request, github_request_params)
     return response.json()['items'][:top_size]
